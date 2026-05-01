@@ -3,3 +3,6 @@ sqlalchemy
 pydantic
 uvicorn
 python-dotenv
+gunicorn
+psycopg2-binary
+
