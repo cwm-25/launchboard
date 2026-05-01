@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LaunchBoard — Project Management for Solo Builders</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <nav class="navbar">
+      <div class="nav-brand">
+        <span class="logo">🚀</span>
+        <span class="brand-text">LaunchBoard</span>
+      </div>
+      <div class="nav-links">
+        <a href="#dashboard" class="nav-link active" data-view="dashboard">Dashboard</a>
+        <a href="#projects" class="nav-link" data-view="projects">Projects</a>
+      </div>
+    </nav>
+
+    <main id="main-content">
+      <!-- Views rendered by JS -->
+    </main>
+
+    <div id="modal-overlay" class="modal-overlay hidden">
+      <div id="modal-content" class="modal"></div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+  </div>
+
+  <script src="api.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

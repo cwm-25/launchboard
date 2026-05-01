@@ -1,0 +1,64 @@
+# LaunchBoard — Docker Compose (Production-Ready)
+# PostgreSQL + FastAPI Backend + Nginx Frontend
+
+version: "3.9"
+
+services:
+  # ── PostgreSQL ──
+  postgres:
+    image: postgres:latest
+    container_name: launchboard_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-launchboard}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-launchboard}
+      POSTGRES_DB: ${POSTGRES_DB:-launchboard}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-launchboard} -d ${POSTGRES_DB:-launchboard}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - launchboard_network
+
+  # ── FastAPI Backend ──
+  backend:
+    build:
+      context: ./backend/launchboard
+      dockerfile: Dockerfile
+    container_name: launchboard_backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-launchboard}:${POSTGRES_PASSWORD:-launchboard}@postgres:5432/${POSTGRES_DB:-launchboard}
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - launchboard_network
+
+  # ── Nginx Frontend ──
+  frontend:
+    image: nginx:alpine
+    container_name: launchboard_frontend
+    restart: unless-stopped
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - launchboard_network
+
+volumes:
+  postgres_data:
+
+networks:
+  launchboard_network:
+    driver: bridge
