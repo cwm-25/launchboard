@@ -1,9 +1,11 @@
 const API_BASE = (() => {
+  // Allow override via window.API_BASE before loading
+  if (window.API_BASE) return window.API_BASE;
   const host = window.location.hostname;
   if (host === 'localhost' || host === '127.0.0.1') {
     return 'http://localhost:8000/api';
   }
-  // Production backend (Render)
+  // Production backend — update this after backend deployment
   return 'https://launchboard-backend.onrender.com/api';
 })();
 
